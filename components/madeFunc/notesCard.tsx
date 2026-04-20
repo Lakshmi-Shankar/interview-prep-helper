@@ -6,7 +6,13 @@ import { saveUserNotes } from "@/app/dashboard/saveNotes";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function NotesCard({ userData }) {
+type NotesCardProps = {
+  userData: {
+    selfNotes?: string;
+  };
+};
+
+export default function NotesCard({ userData }: NotesCardProps) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [notes, setNotes] = useState(userData.selfNotes || "");

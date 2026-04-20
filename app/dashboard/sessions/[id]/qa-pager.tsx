@@ -230,7 +230,7 @@ export function QAPager({
               i === current
                 ? "bg-[#c97a2f] scale-[1.35]"
                 : i < current
-                ? q.correct
+                ? q.score > 2
                   ? "bg-[#4a7c59]"
                   : "bg-[#9b3a3a]"
                 : "bg-[#ede0d9]"

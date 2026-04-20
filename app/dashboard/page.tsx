@@ -235,7 +235,7 @@ export default function DashboardPage() {
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Progress Overview */}
-            <ProgressCard categoryProgress={categoryProgress} onViewDetails={() => router.push("/progress")} />
+            <ProgressCard  />
 
             {/* Recent Sessions */}
             <Card className="bg-card border-border animate-fade-in-up" style={{ animationDelay: "500ms" }}>
@@ -341,7 +341,7 @@ export default function DashboardPage() {
             </Card>
 
             {/* Self Notes */}
-            <NotesCard userData={userData} />
+            <NotesCard userData={{ selfNotes: userData.selfNotes ?? undefined }} />
 
             {/* Motivational Card */}
             <Card className="bg-primary text-primary-foreground border-0 overflow-hidden animate-fade-in-up" style={{ animationDelay: "600ms" }}>

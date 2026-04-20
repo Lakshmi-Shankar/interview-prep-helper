@@ -4,10 +4,14 @@ import { QAPager } from "./qa-pager";
 export default async function SessionPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  const { id } = await params;
+  const { id } = params;
   const data = await fetchQAData(id);
+  if (!data || (Array.isArray(data) && data.length === 0)) {
+    throw new Error("Session not found");
+  }
+
   const session = Array.isArray(data) ? data[0] : data;
   console.log("Fetched session data:", session);
 

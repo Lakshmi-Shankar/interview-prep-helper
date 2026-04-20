@@ -252,7 +252,7 @@ export default function SessionsPage() {
       try {
         await getSessions().then((data) => {
           console.log("Fetched sessions:", data);
-          setSessions(data);
+          setSessions(data ?? []);
         }).catch((error) => {
           console.error("Error fetching sessions:", error);
         });
