@@ -79,4 +79,4 @@ export async function createUser(
 
   if (error) throw error;
   return data;
-}
+};
