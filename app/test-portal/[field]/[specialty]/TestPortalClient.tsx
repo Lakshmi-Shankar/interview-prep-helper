@@ -47,7 +47,7 @@ export default function TestPortalClient({ field, specialty }: Props) {
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [questionSet, setQuestionSet] = useState<Result[]>([]);
+  // const [questionSet, setQuestionSet] = useState<Result[]>([]);
 
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<string[]>([])
@@ -127,7 +127,9 @@ export default function TestPortalClient({ field, specialty }: Props) {
     setFinished(true)
     const qaPairs = questions.map((q, i) => ({
       question: q.question,
-      answer: answers[i]
+      answer: answers[i],
+      score: 0,
+      feedback: "",
     }))
     // console.log(qaPairs)
     const evaluatedResults = await checkAnswerAction(qaPairs)

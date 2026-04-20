@@ -4,11 +4,17 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+type ErrorScreenProps = {
+  error?: string;
+  onRetry?: () => void;
+  showBackToLogin?: boolean;
+};
+
 export default function ErrorScreen({ 
   error = "We couldn't load your dashboard data. Please try again.",
   onRetry,
   showBackToLogin = true 
-}) {
+}: ErrorScreenProps) {
   const router = useRouter();
 
   const handleRetry = () => {

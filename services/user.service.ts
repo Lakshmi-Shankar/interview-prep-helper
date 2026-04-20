@@ -56,3 +56,27 @@ export async function updateUser(id: string, updates: {
   if (error) throw error;
   return data;
 }
+
+
+export async function createUser(
+  name: string,
+  mail: string,
+  password: string
+) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('User')
+    .insert([
+      {
+        name,
+        mail,
+        password, // ⚠ see note below
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};

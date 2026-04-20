@@ -106,7 +106,7 @@ Strict:
       .trim()
 
     // 🔒 Extract JSON safely
-    const match = cleaned.match(/\[.*\]/s)
+    const match = cleaned.match(/\[[\s\S]*\]/)
     if (!match) {
       console.error("RAW:", raw)
       throw new Error("No valid JSON array found")

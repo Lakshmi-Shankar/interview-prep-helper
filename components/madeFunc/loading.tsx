@@ -1,6 +1,6 @@
 "use client";
 import { Sparkles, Wand } from "lucide-react";
-import { BellElectricIcon } from "./ui/bell-electric";
+// import { BellElectricIcon } from "./ui/bell-electric";
 
 export default function LoadingDashboard({ message = "Preparing your dashboard" }) {
   return (

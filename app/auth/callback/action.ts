@@ -23,7 +23,7 @@ export async function handleOAuthCallback() {
       .single();
 
     // If user doesn't exist (PGRST116 is "no rows returned" error)
-    if (!existingUser || fetchError?.code === "PGRST116") {
+    if (!existingUser || (fetchError && 'code' in fetchError && (fetchError as { code: string }).code === "PGRST116")) {
       console.log("🆕 Creating new user profile for:", user.email);
 
       // Extract name from user metadata
