@@ -31,10 +31,10 @@ useEffect(() => {
       } else {
         console.error("⚠️ Profile creation failed:", result.error);
         // Optionally show error to user
-        router.replace("/auth/login");
+        router.replace("/auth/signin");
       }
     } else {
-      router.replace("/auth/login");
+      router.replace("/auth/signin");
     }
   };
 

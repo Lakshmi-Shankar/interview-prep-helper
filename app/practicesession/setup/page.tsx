@@ -7,6 +7,7 @@ import Image from "next/image"
 import { Bell, Settings, LogOut } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/LogOutClient"
 import { getUserDashboardData } from "@/app/dashboard/action"
 
 import OptionsCompo from "./optionsCompo"
@@ -51,8 +52,9 @@ export default function GhostPage() {
   }, [router])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/auth/signin")
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.href = "/auth/signin";
   }
 
   if (loading) return <LoadingDashboard />
