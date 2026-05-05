@@ -35,7 +35,7 @@ export async function handleOAuthCallback() {
       // Insert new user
       const { data: newUser, error: insertError } = await supabase
         .from("User")
-        .insert({
+        .upsert({
           id: user.id,
           name: name,
           mail: user.email,
@@ -43,7 +43,9 @@ export async function handleOAuthCallback() {
           videoUrls: [],
           rating: null,
           selfNotes: null,
-        })
+        },
+         { onConflict: "mail" }
+        )
         .select()
         .single();
 
