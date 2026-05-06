@@ -9,15 +9,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { 
   Video,  
   FileText, 
-  Play, 
+  ClipboardCheck, 
   Plus, 
-  TrendingUp,
+  ThumbsUp,
   Calendar,
   ChevronRight,
   BarChart3,
   Hash,
   Award,
-  Gauge
+  Gauge,
+  ThumbsDown,
+  Play
 } from "lucide-react"
 import { getUserDashboardData } from "./action"
 import { supabase } from "@/lib/supabase/client"
@@ -47,7 +49,7 @@ interface UserData {
 
 
 const quickActions = [
-  { icon: Play, label: "Start Practice", href: "/practicesession/setup", color: "bg-primary" },
+  { icon: Play, label: "New Practice Session", href: "/practicesession/setup", color: "bg-primary" },
   { icon: Video, label: "Review Videos", href: "/videos", color: "bg-accent" },
   { icon: FileText, label: "My Notes", href: "/notes", color: "bg-secondary" },
 ]
@@ -123,7 +125,7 @@ export default function DashboardPage() {
 
   // Loading state
   if (loading) {
-    return <LoadingDashboard />
+    return <LoadingDashboard message="Preparing your interview insights..." />
   }
 
   // Error state
@@ -164,10 +166,21 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Total Attempts</p>
                   <p className="text-3xl font-bold text-foreground mt-1">{totalSessions}</p>
-                  <p className="text-xs text-green-600 flex items-center gap-1 mt-2">
-                    <TrendingUp className="w-3 h-3" />
-                    +{weeklySessionsCount%7} this week
-                  </p>
+                  {weeklySessionsCount >= 0 && (
+                    <p className="text-xs text-gray-500 flex items-center gap-1 mt-2">
+                      {weeklySessionsCount > 0 ? (
+                        <>
+                          <ThumbsUp className="w-3 h-3 text-green-600" />
+                          +{weeklySessionsCount} this week
+                        </>
+                      ) : (
+                        <>
+                        <ThumbsDown className="w-3 h-3 text-red-500" />
+                          No sessions this week
+                        </>
+                      )}
+                    </p>
+                  )}
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                   <Hash className="w-6 h-6 text-primary" />
@@ -185,7 +198,7 @@ export default function DashboardPage() {
                     {avgScore}
                   </p>
                   <p className="text-xs text-muted-foreground mt-2">
-                    {userData.videoUrls.length} of {userData.attemptsCount} recorded
+                    {totalSessions} sessions completed 
                   </p>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-accent/30 flex items-center justify-center">
@@ -276,37 +289,61 @@ export default function DashboardPage() {
                   ) : (
                     sessions.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 5)
                       .map((session) => (
-                      <div
+                     <div
                         key={session.id}
-                        className="flex items-center justify-between p-4 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors cursor-pointer group"
+                        className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border hover:border-border/60 hover:bg-secondary/30 transition-all cursor-pointer group"
                       >
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                            <Play className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-foreground tracking-wide capitalize text-sm">
-                              {session.field} • {session.domain}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(session.created_at).toLocaleDateString()}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {session.correct_answers} / {session.total_questions} correct
-                            </p>
-                          </div>
+                        {/* Play icon */}
+                        <div className="w-11 h-11 flex-shrink-0 rounded-lg bg-blue-50 dark:bg-blue-950 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900 transition-colors">
+                          <ClipboardCheck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                         </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className={`text-lg font-bold ${getScoreColor(session.score)}`}>
-                              {session.score}/{session.total_questions * 5}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Score
-                            </p>
-                          </div>
-                          <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+
+                        {/* Meta info */}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground mb-0.5">
+                            {session.field} • {session.domain}
+                          </p>
+                          <p className="text-sm font-medium text-foreground capitalize truncate">
+                            {session.topic ?? `${session.field} session`}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(session.created_at).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </p>
+                          {/* Correct answers pill */}
+                          <span
+                            className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium ${
+                              session.correct_answers / session.total_questions >= 0.7
+                                ? "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400"
+                                : session.correct_answers / session.total_questions >= 0.5
+                                ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400"
+                                : "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400"
+                            }`}
+                          >
+                            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            {session.correct_answers} / {session.total_questions} correct
+                          </span>
                         </div>
+
+                        {/* Score */}
+                        <div className="flex-shrink-0 text-right">
+                          <p className={`text-xl font-semibold leading-none ${getScoreColor(session.score)}`}>
+                            {session.score}
+                            <span className="text-sm font-normal text-muted-foreground">
+                              /{session.total_questions * 5}
+                            </span>
+                          </p>
+                          <p className="text-[11px] uppercase tracking-widest text-muted-foreground mt-1">Score</p>
+                          {/* Mini progress bar */}
+                        </div>
+
+                        {/* Chevron */}
+                        <Award className="w-4 h-4 text-muted-foreground group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0" />
                       </div>
                     ))
                   )}

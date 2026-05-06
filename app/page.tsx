@@ -16,9 +16,9 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-xl font-serif text-foreground">Interview Prep Helper</h1>
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">How It Works</a>
-            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a>
-            <a href="#who-its-for" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Who It&apos;s For</a>
+            <a href="#how-it-works" className="relative text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-foreground after:transition-all after:duration-300 hover:after:w-full">How It Works</a>
+            <a href="#features" className="relative text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-foreground after:transition-all after:duration-300 hover:after:w-full">Features</a>
+            <a href="#who-its-for" className="relative text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-foreground after:transition-all after:duration-300 hover:after:w-full">Who It&apos;s For</a>
           </nav>
           <Button size="sm"><Link href="/auth/signin">Start Practicing</Link></Button>
         </div>
@@ -52,7 +52,8 @@ export default function Home() {
                       className="absolute top-2 right-2 text-white text-xl z-10 hover:cursor-pointer"
                       onClick={() => setOpen(false)}
                     >
-                      <X className="w-6 h-6" />
+                      {/* X / close — slate gray, neutral dismissal */}
+                      <X className="w-6 h-6 text-slate-400" />
                     </button>
 
                     <video
@@ -78,8 +79,9 @@ export default function Home() {
             </div>
             <div className="absolute -bottom-4 -left-4 bg-card p-4 rounded-xl shadow-lg border border-border">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-950 flex items-center justify-center">
+                  {/* Clock — amber/orange: urgency, time pressure */}
+                  <Clock className="w-5 h-5 text-amber-500" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground">Real-time Timer</p>
@@ -106,25 +108,34 @@ export default function Home() {
                 title: "Choose a Role",
                 description: "Select your field and difficulty level.",
                 icon: ClipboardList,
+                // Clipboard — indigo: thoughtful selection, planning
+                iconColor: "text-indigo-500",
+                bgColor: "bg-indigo-100 dark:bg-indigo-950",
               },
               {
                 step: "02",
                 title: "Practice Under Pressure",
                 description: "Answer timed interview questions while your camera records you.",
                 icon: Video,
+                // Video — rose: live, on-camera, high-stakes
+                iconColor: "text-rose-500",
+                bgColor: "bg-rose-100 dark:bg-rose-950",
               },
               {
                 step: "03",
                 title: "Review & Improve",
                 description: "Watch your response, rate yourself, add notes, and track progress.",
                 icon: BarChart3,
+                // BarChart — emerald: growth, progress, success
+                iconColor: "text-emerald-500",
+                bgColor: "bg-emerald-100 dark:bg-emerald-950",
               },
             ].map((item) => (
               <Card key={item.step} className="bg-card border-border hover:shadow-lg transition-shadow">
                 <CardContent className="p-8">
                   <span className="text-5xl font-serif text-primary/20">{item.step}</span>
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mt-4 mb-6">
-                    <item.icon className="w-7 h-7 text-primary" />
+                  <div className={`w-14 h-14 rounded-xl ${item.bgColor} flex items-center justify-center mt-4 mb-6`}>
+                    <item.icon className={`w-7 h-7 ${item.iconColor}`} />
                   </div>
                   <h4 className="text-xl font-semibold text-foreground mb-3">{item.title}</h4>
                   <p className="text-muted-foreground leading-relaxed">{item.description}</p>
@@ -149,39 +160,63 @@ export default function Home() {
                 icon: Clock,
                 title: "Real Interview Timer",
                 description: "Simulates actual interview pressure",
+                // Clock — amber: time, urgency
+                iconColor: "text-amber-500",
+                bgColor: "bg-amber-100 dark:bg-amber-950",
+                hoverBg: "group-hover:bg-amber-200 dark:group-hover:bg-amber-900",
               },
               {
                 icon: Video,
                 title: "Video Recording",
                 description: "Review body language and communication",
+                // Video — rose: live recording, camera
+                iconColor: "text-rose-500",
+                bgColor: "bg-rose-100 dark:bg-rose-950",
+                hoverBg: "group-hover:bg-rose-200 dark:group-hover:bg-rose-900",
               },
               {
                 icon: ClipboardList,
                 title: "Curated Question Bank",
                 description: "Role and difficulty-based questions",
+                // Clipboard — indigo: organized knowledge, structured prep
+                iconColor: "text-indigo-500",
+                bgColor: "bg-indigo-100 dark:bg-indigo-950",
+                hoverBg: "group-hover:bg-indigo-200 dark:group-hover:bg-indigo-900",
               },
               {
                 icon: BarChart3,
                 title: "Progress Tracking",
                 description: "See improvement over time",
+                // BarChart — emerald: growth, positive momentum
+                iconColor: "text-emerald-500",
+                bgColor: "bg-emerald-100 dark:bg-emerald-950",
+                hoverBg: "group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900",
               },
               {
                 icon: Lock,
                 title: "Private & Secure",
                 description: "Your recordings stay yours",
+                // Lock — slate: trust, security, neutral strength
+                iconColor: "text-slate-500",
+                bgColor: "bg-slate-100 dark:bg-slate-800",
+                hoverBg: "group-hover:bg-slate-200 dark:group-hover:bg-slate-700",
               },
               {
                 icon: Users,
                 title: "Community Support",
                 description: "Learn from others' experiences",
+                // Users — sky: open, collaborative, community
+                iconColor: "text-sky-500",
+                bgColor: "bg-sky-100 dark:bg-sky-950",
+                hoverBg: "group-hover:bg-sky-200 dark:group-hover:bg-sky-900",
               },
             ].map((feature) => (
               <div
                 key={feature.title}
                 className="p-6 rounded-xl bg-card border border-border hover:border-primary/30 transition-colors group"
               >
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                  <feature.icon className="w-6 h-6 text-primary" />
+                <div className={`w-12 h-12 rounded-lg ${feature.bgColor} ${feature.hoverBg} flex items-center justify-center mb-4 transition-colors`}>
+                  <feature.icon className={`w-6 h-6 ${feature.iconColor}`} />
                 </div>
                 <h4 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h4>
                 <p className="text-sm text-muted-foreground">{feature.description}</p>
@@ -241,27 +276,39 @@ export default function Home() {
                 icon: GraduationCap,
                 title: "Students",
                 description: "Preparing for placements",
+                // GraduationCap — violet: academia, learning
+                iconColor: "text-violet-500",
+                bgColor: "bg-violet-100 dark:bg-violet-950",
               },
               {
                 icon: Users,
                 title: "Freshers",
                 description: "Early-career developers",
+                // Users — sky: open community, beginners finding their place
+                iconColor: "text-sky-500",
+                bgColor: "bg-sky-100 dark:bg-sky-950",
               },
               {
                 icon: Briefcase,
                 title: "Professionals",
                 description: "Switching roles",
+                // Briefcase — orange: career ambition, momentum
+                iconColor: "text-orange-500",
+                bgColor: "bg-orange-100 dark:bg-orange-950",
               },
               {
                 icon: ArrowRight,
                 title: "Anyone",
                 description: "Who wants confidence",
+                // ArrowRight — emerald: forward motion, growth
+                iconColor: "text-emerald-500",
+                bgColor: "bg-emerald-100 dark:bg-emerald-950",
               },
             ].map((persona) => (
               <Card key={persona.title} className="text-center border-border hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <persona.icon className="w-8 h-8 text-primary" />
+                  <div className={`w-16 h-16 rounded-full ${persona.bgColor} flex items-center justify-center mx-auto mb-4`}>
+                    <persona.icon className={`w-8 h-8 ${persona.iconColor}`} />
                   </div>
                   <h4 className="text-lg font-semibold text-foreground mb-1">{persona.title}</h4>
                   <p className="text-sm text-muted-foreground">{persona.description}</p>
@@ -332,6 +379,7 @@ export default function Home() {
             <Link href="/auth/signin">
               Start Your Mock Interview
             </Link>
+            {/* ArrowRight in CTA — inherits button's primary-foreground, naturally contrasts */}
             <ArrowRight className="w-5 h-5" />
           </Button>
         </div>

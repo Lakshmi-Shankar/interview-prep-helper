@@ -1,8 +1,20 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Sparkles, Wand } from "lucide-react";
 // import { BellElectricIcon } from "./ui/bell-electric";
 
-export default function LoadingDashboard({ message = "Preparing your dashboard" }) {
+export default function LoadingDashboard({ message }: { message: string }) {
+
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((p) => Math.min(p + Math.random() * 15, 95))
+    }, 400)
+    return () => clearInterval(interval)
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
       {/* Animated background shapes */}
@@ -21,18 +33,7 @@ export default function LoadingDashboard({ message = "Preparing your dashboard" 
         
         {/* Animated loader */}
         <div className="relative animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-          <div className="w-20 h-20 mx-auto relative">
-            {/* Outer spinning ring */}
-            <div className="absolute inset-0 rounded-full border-4 border-secondary" />
-            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin" />
-            
-            {/* Inner pulsing circle */}
-            <div className="absolute inset-3 rounded-full bg-primary/10 flex items-center justify-center">
-              {/* <Sparkles className="w-6 h-6 text-primary animate-pulse" /> */}
-              
-              <Wand size={34} className="animate-pulse" />
-            </div>
-          </div>
+          <div className="h-full bg-primary rounded-full" style={{ width: `${progress}%` }} />
         </div>
         
         {/* Loading steps */}
