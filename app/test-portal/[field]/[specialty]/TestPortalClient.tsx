@@ -44,6 +44,8 @@ const groq = new Groq({
 export default function TestPortalClient({ field, specialty }: Props) {
   const router = useRouter()
 
+  const [submitting, setSubmitting] = useState(false)
+
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -123,21 +125,33 @@ export default function TestPortalClient({ field, specialty }: Props) {
   }
 
   async function handleSubmit() {
+    if (submitting) return
+
+    setSubmitting(true)
     toast.loading("Submitting your answers...")
-    setFinished(true)
-    const qaPairs = questions.map((q, i) => ({
-      question: q.question,
-      answer: answers[i],
-      score: 0,
-      feedback: "",
-    }))
-    // console.log(qaPairs)
-    const evaluatedResults = await checkAnswerAction(qaPairs)
-    console.log(evaluatedResults);
-    await saveSessionAction(field, specialty, evaluatedResults)
-    // console.log("Session saved")
-    toast.dismiss()
-    toast.success("Your answers have been submitted and evaluated!")
+
+    try {
+      setFinished(true)
+
+      const qaPairs = questions.map((q, i) => ({
+        question: q.question,
+        answer: answers[i],
+        score: 0,
+        feedback: "",
+      }))
+
+      const evaluatedResults = await checkAnswerAction(qaPairs)
+      await saveSessionAction(field, specialty, evaluatedResults)
+
+      toast.dismiss()
+      toast.success("Your answers have been submitted and evaluated!")
+    } catch (err) {
+      toast.dismiss()
+      toast.error("Submission failed. Try again.")
+      setFinished(false) // rollback if needed
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const answeredCount = answers.filter((a) => a.trim().length > 0).length
@@ -192,14 +206,45 @@ export default function TestPortalClient({ field, specialty }: Props) {
           <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
             <button
               onClick={generateQuestions}
-              className="inline-flex items-center justify-center gap-2 bg-[#f7f3f4] hover:bg-[#ede8e9] border border-[#e2d8da] text-[#544349] font-medium px-6 py-3 rounded-xl transition-colors"
+              disabled={submitting}
+              className="
+inline-flex items-center justify-center gap-2
+px-5 py-3 rounded-xl
+border border-[#e2d8da]
+bg-white hover:bg-[#f7f3f4]
+text-[#544349] text-sm font-medium
+
+transition-all duration-200 ease-in-out
+active:scale-[0.98]
+
+disabled:bg-[#f0eaeb]
+disabled:text-[#b09a9f]
+disabled:border-[#e2d8da]
+disabled:cursor-not-allowed
+disabled:opacity-80
+"
             >
               <RotateCcw className="w-4 h-4" />
               Retake Test
             </button>
+
             <button
               onClick={() => router.push("/dashboard")}
-              className="inline-flex items-center justify-center gap-2 bg-[#544349] hover:bg-[#3e3036] text-white font-medium px-6 py-3 rounded-xl transition-colors"
+              disabled={submitting}
+              className="
+inline-flex items-center justify-center gap-2
+px-5 py-3 rounded-xl
+bg-[#544349] hover:bg-[#3e3036]
+text-white text-sm font-medium
+
+transition-all duration-200 ease-in-out
+active:scale-[0.98]
+
+disabled:bg-[#c8b5ba]
+disabled:text-white/70
+disabled:cursor-not-allowed
+disabled:opacity-80
+"
             >
               <Home className="w-4 h-4" />
               Go Back
@@ -423,10 +468,32 @@ export default function TestPortalClient({ field, specialty }: Props) {
             ) : (
               <button
                 onClick={handleSubmit}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#3e3036] hover:bg-[#2e2328] text-white text-sm font-medium transition-colors"
+                disabled={submitting}
+                className="
+inline-flex items-center justify-center gap-2
+px-5 py-3 rounded-xl
+bg-[#3e3036] hover:bg-[#2e2328]
+text-white text-sm font-medium
+transition-all duration-200 ease-in-out
+active:scale-[0.98]
+
+disabled:bg-[#c8b5ba]
+disabled:text-white/70
+disabled:cursor-not-allowed
+disabled:opacity-80
+"
               >
-                <Send className="w-4 h-4" />
-                <span>Submit Test</span>
+                {submitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Submit Test
+                  </>
+                )}
               </button>
             )}
           </div>

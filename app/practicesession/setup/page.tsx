@@ -57,7 +57,7 @@ export default function GhostPage() {
     window.location.href = "/auth/signin";
   }
 
-  if (loading) return <LoadingDashboard />
+  if (loading) return <LoadingDashboard message="Preparing your questions..."/>
 
   if (error || !userData) {
     return (

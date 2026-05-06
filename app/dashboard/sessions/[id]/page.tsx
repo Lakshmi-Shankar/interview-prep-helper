@@ -1,14 +1,18 @@
 import { fetchQAData } from "@/app/dashboard/action";
 import { QAPager } from "./qa-pager";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react"
 
 export default async function SessionPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const { id } = params;
+  // console.log("Params:", params)
+  const { id } = await params;
   const data = await fetchQAData(id);
   if (!data || (Array.isArray(data) && data.length === 0)) {
+    console.error(`No session data found for ID: ${id}`);
     throw new Error("Session not found");
   }
 
@@ -47,21 +51,22 @@ export default async function SessionPage({
       {/* Sticky Nav */}
       <nav className="sticky top-0 z-10 bg-[#fff9f7] border-b border-[#e8d8d2] px-4">
         <div className="max-w-[1100px] mx-auto h-12 flex items-center gap-2.5">
-          <a
-            href="/dashboard"
-            className="flex items-center gap-1.5 text-[#7a5c63] text-[13px] font-medium px-2.5 py-1.5 rounded-full hover:bg-[#f5ede8] transition-colors"
+          <Link
+            href="/dashboard/sessions"
+            className="
+              group inline-flex items-center gap-2
+              text-[#7a5c63] text-[13px] font-medium
+              px-3 py-1.5 rounded-full
+
+              hover:bg-[#f5ede8] hover:text-[#544349]
+              active:scale-[0.97]
+
+              transition-all duration-200
+            "
           >
-            <svg
-              className="w-4 h-4 fill-none stroke-[#7a5c63]"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-            Back
-          </a>
+            <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1" />
+            <span>Back to Sessions</span>
+          </Link>
 
           <div className="w-px h-5 bg-[#e8d8d2]" />
 
